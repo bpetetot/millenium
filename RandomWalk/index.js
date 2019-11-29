@@ -14,17 +14,24 @@ gui.add(variables, "type", ["circle", "rect"]);
 gui.add(variables, "size", 1, 20).step(1);
 
 let canvas;
-let running = true;
 let boundingBox;
 let currentDot;
 let currentHue;
 
-const button = document.getElementById("start-button");
-button.addEventListener('click', () => {
+// start / stop button
+let running = true;
+const startButton = document.getElementById("start-button");
+startButton.addEventListener('click', () => {
   running = !running;
   if (running) {
     window.requestAnimationFrame(loop);
   }
+});
+
+// export button
+const exportButton = document.getElementById("export-button");
+exportButton.addEventListener('click', () => {
+  console.log(canvas.svg())
 });
 
 async function main() {
@@ -69,9 +76,9 @@ function loop() {
     element = canvas.rect(variables.size, variables.size);
   }
 
-  currentHue = randomNumber(currentHue, 5, 0, 360);
-  const color = `hsl(${currentHue}, 50%, 50%)`;
-  // const color = '#fff'
+  // currentHue = randomNumber(currentHue, 5, 0, 360);
+  // const color = `hsl(${currentHue}, 50%, 50%)`;
+  const color = '#fff'
 
   element
     .move(currentDot.x, currentDot.y)
