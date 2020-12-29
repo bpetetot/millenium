@@ -1,27 +1,34 @@
+import Grid from "../utils/grid.js";
 import Node from "../utils/node.js";
 import { createEngine } from "../utils/engine.js";
 import { randomNumber, randomWalk } from "../utils/math.js";
-
 
 let nodes = [];
 let currentHue;
 
 const variables = {
   type: "circle",
-  size: 5
+  size: 1
 };
 
+const options = {
+  clear: false,
+}
+
 createEngine({
+  options,
   init: ({ gui, boundingBox }) => {
     gui.add(variables, "type", ["circle", "rect"]);
     gui.add(variables, "size", 1, 20).step(1);
 
-    nodes.push(new Node(boundingBox.width / 2, boundingBox.height / 2))
+    // nodes.push(new Node(boundingBox.width / 2, boundingBox.height / 2))
+    const grid = new Grid(50, 50, 10, 100);
+    nodes = grid.toArray();
 
-    currentHue = 180;
+    currentHue = 0;
   },
   render: ({ canvas, boundingBox }) => {
-    nodes = nodes.map((node) => {
+    nodes = nodes.map(node => {
       // compute
       const newNode = randomWalk(node, boundingBox, variables.size);
 
@@ -33,15 +40,16 @@ createEngine({
         element = canvas.rect(variables.size, variables.size);
       }
 
-      currentHue = randomNumber(currentHue, 5, 0, 360);
-      const color = `hsl(${currentHue}, 50%, 50%)`;
+      currentHue = randomNumber(currentHue, 1, 0, 100);
+      const color = `hsl(0, 0%, ${currentHue}%)`;
+      // const color = "#fff";
 
       element
         .move(newNode.x, newNode.y)
         .fill(color)
-        .stroke({ color: "hsl(0, 0%, 0%)", width: 1 });
+        .stroke({ color, width: 1 });
 
       return newNode;
-    })
+    });
   }
 }).then(start => start());

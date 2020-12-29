@@ -1,9 +1,20 @@
-import { getCanvas } from "./canvas.js";
-
 import * as dat from "/node_modules/dat.gui/build/dat.gui.module.js";
 
-export async function createEngine({ init, render, options } = {}) {
-  const {  } = options || {};
+let canvas;
+
+function getCanvas() {
+  return new Promise(resolve => {
+    if (canvas) resolve(canvas);
+
+    SVG.on(document, "DOMContentLoaded", () => {
+      canvas = SVG("root").size(300, 300);
+
+      resolve(canvas);
+    });
+  });
+}
+
+export async function createEngine({ init, render, options = { clear: false } } = {}) {
   const gui = new dat.GUI();
   const canvas = await getCanvas();
   const boundingBox = canvas.node.getBoundingClientRect();
@@ -14,7 +25,7 @@ export async function createEngine({ init, render, options } = {}) {
     gui,
     canvas,
     boundingBox,
-    isRunning,
+    isRunning
   });
 
   // start / stop button
@@ -35,13 +46,13 @@ export async function createEngine({ init, render, options } = {}) {
   function loop() {
     if (!canvas) return;
 
-    // canvas.clear();
+    if (options.clear) canvas.clear();
 
     render({
       gui,
       canvas,
       boundingBox,
-      isRunning,
+      isRunning
     });
 
     if (isRunning) {

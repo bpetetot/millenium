@@ -1,4 +1,4 @@
-export default class Dot {
+export default class Node {
   constructor(x, y) {
     this._x = x;
     this._y = y;
