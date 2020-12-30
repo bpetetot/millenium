@@ -1,7 +1,9 @@
 export default class Node {
-  constructor(x, y) {
+  constructor(x, y, i, j) {
     this._x = x;
     this._y = y;
+    this._i = i;
+    this._j = j;
   }
 
   get x() {

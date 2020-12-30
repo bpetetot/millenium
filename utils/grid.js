@@ -1,27 +1,44 @@
-import Node from "./node.js";
+import Node from './node.js';
 
-export default class Grid {
-  constructor(x, y, size, space) {
-    this._size = size;
-    this._x = x;
-    this._y = y;
+export function buildSquareGrid(width, height, size) {
+  const horizontalDotX = Math.round(width / size);
+  const horizontalDotY = Math.round(height / size);
 
-    this._grid = new Array(size);
-    for (var i = 0; i < size; i++) {
-      this._grid[i] = new Array(size);
-      for (var j = 0; j < size; j++) {
-        this._grid[i][j] = new Node(x + (i * space), y + (j * space));
+  const grid = [];
+
+  for (var i = 0; i < horizontalDotX; i++) {
+    for (var j = 0; j < horizontalDotY; j++) {
+      grid.push(new Node(i * size, j * size, i, j));
+    }
+  }
+
+  return grid;
+}
+
+export function buildCircleGrid(radius, size) {
+  const nodesCount = Math.round((radius * 2) / size);
+
+  const grid = [];
+
+  for (var i = 0; i < nodesCount; i++) {
+    for (var j = 0; j < nodesCount; j++) {
+      let dx = radius - i * size;
+      let dy = radius - j * size;
+      let ds = dx * dx + dy * dy;
+      if (ds <= radius * radius) {
+        grid.push(new Node(i * size, j * size, i, j));
       }
     }
   }
 
-  toArray() {
-    const result = [];
-    for (var i = 0; i < this._size; i++) {
-      for (var j = 0; j < this._size; j++) {
-        result.push(this._grid[i][j]);
-      }
-    }
-    return result;
-  }
+  return grid;
+}
+
+export function getGridBBox(width, height, size) {
+  return {
+    left: 0,
+    top: 0,
+    right: width,
+    bottom: height,
+  };
 }

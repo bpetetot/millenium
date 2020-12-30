@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "svg": "./svg.js"
+  }
+}

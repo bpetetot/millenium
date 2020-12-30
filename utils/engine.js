@@ -1,13 +1,13 @@
-import * as dat from "/node_modules/dat.gui/build/dat.gui.module.js";
+import * as dat from '/node_modules/dat.gui/build/dat.gui.module.js';
 
 let canvas;
 
 function getCanvas() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (canvas) resolve(canvas);
 
-    SVG.on(document, "DOMContentLoaded", () => {
-      canvas = SVG("root").size(300, 300);
+    SVG.on(document, 'DOMContentLoaded', () => {
+      canvas = SVG('root').size(300, 300);
 
       resolve(canvas);
     });
@@ -21,41 +21,56 @@ export async function createEngine({ init, render, options = { clear: false } } 
 
   let isRunning = true;
 
-  init({
-    gui,
-    canvas,
-    boundingBox,
-    isRunning
-  });
+  if (init) {
+    init({
+      gui,
+      canvas,
+      boundingBox,
+      isRunning,
+      reset: loop,
+    });
+  }
 
   // start / stop button
-  const startButton = document.getElementById("start-button");
-  startButton.addEventListener("click", () => {
-    isRunning = !isRunning;
-    if (isRunning) {
-      window.requestAnimationFrame(loop);
-    }
-  });
+  const startButton = document.getElementById('start-button');
+  if (startButton) {
+    startButton.addEventListener('click', () => {
+      isRunning = !isRunning;
+      if (isRunning) {
+        window.requestAnimationFrame(loop);
+      }
+    });
+  }
 
   // export button
-  const exportButton = document.getElementById("export-button");
-  exportButton.addEventListener("click", () => {
-    console.log(canvas.svg());
-  });
+  const exportButton = document.getElementById('export-button');
+  if (exportButton) {
+    exportButton.addEventListener('click', () => {
+      console.log(canvas.svg());
+    });
+  }
+
+  // reset button
+  const resetButton = document.getElementById('reset-button');
+  if (resetButton) {
+    resetButton.addEventListener('click', () => {
+      loop();
+    });
+  }
 
   function loop() {
     if (!canvas) return;
 
     if (options.clear) canvas.clear();
 
-    render({
+    const shouldRun = render({
       gui,
       canvas,
       boundingBox,
-      isRunning
+      isRunning,
     });
 
-    if (isRunning) {
+    if (shouldRun && isRunning) {
       window.requestAnimationFrame(loop);
     }
   }
